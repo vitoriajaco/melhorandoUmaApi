@@ -21,7 +21,10 @@ public class AdocaoService {
     private AdocaoRepository repository;
 
     @Autowired
-    private JavaMailSender emailSender;
+    private EmailService emailService;
+
+
+
 
     public void solicitar(Adocao adocao){
 
@@ -56,12 +59,10 @@ public class AdocaoService {
         adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
         repository.save(adocao);
 
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setFrom("adopet@email.com.br");
-        email.setTo(adocao.getPet().getAbrigo().getEmail());
-        email.setSubject("Solicitação de adoção");
-        email.setText("Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.");
-        emailSender.send(email);
+        emailService.enviarEmail(adocao.getPet().getAbrigo().getEmail(),
+                "Solicitação de adoção",
+                "Olá " +adocao.getPet().getAbrigo().getNome()
+                +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.");
 
 
     }
