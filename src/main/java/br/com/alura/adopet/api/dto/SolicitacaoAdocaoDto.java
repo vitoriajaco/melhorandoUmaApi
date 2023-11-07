@@ -4,5 +4,8 @@ package br.com.alura.adopet.api.dto;
 // são portadores transparentes para dados imutáveis superficiais visando reduzir significamente o detalhamento dessas classes
 // e irá melhorar a capacidade de leitura e manutenção do código
 
-public record SolicitacaoAdocaoDto (Long idPet, Long idTutor, String motivo){
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record SolicitacaoAdocaoDto (@NotNull Long idPet,@NotNull Long idTutor, @NotBlank String motivo){
 }
