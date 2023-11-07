@@ -67,8 +67,15 @@ public class AdocaoService {
                 }
             }
         }
+
+        //criando objeto adocao
+        Adocao adocao = new Adocao();
         adocao.setData(LocalDateTime.now());
         adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
+        adocao.setPet(pet);
+        adocao.setTutor(tutor);
+        adocao.setMotivo(dto.motivo());
+
         repository.save(adocao);
 
         emailService.enviarEmail(adocao.getPet().getAbrigo().getEmail(),
@@ -81,9 +88,9 @@ public class AdocaoService {
 
 
     public void aprovar (AprovacaoAdocaoDto dto){
-
+        Adocao adocao = repository.getReferenceById(dto.idAdocao());
         adocao.setStatus(StatusAdocao.APROVADO);
-        repository.save(adocao);
+        //repository.save(adocao); -> Nao é necessario pois o jpa ja salva automaticamente
 
         emailService.enviarEmail(
                 adocao.getPet().getAbrigo().getEmail(),
@@ -96,8 +103,10 @@ public class AdocaoService {
 
 
     public void reprovar(ReprovacaoAdocaoDto dto){
+        Adocao adocao = repository.getReferenceById(dto.idAdocao());
         adocao.setStatus(StatusAdocao.REPROVADO);
-        repository.save(adocao);
+        adocao.setJustificativaStatus(dto.justificativa());
+       // repository.save(adocao);
 
         emailService.enviarEmail(
                 adocao.getPet().getAbrigo().getEmail(),
