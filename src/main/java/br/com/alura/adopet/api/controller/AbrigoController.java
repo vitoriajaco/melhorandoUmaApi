@@ -16,6 +16,8 @@ import java.util.List;
 @RequestMapping("/abrigos")
 public class AbrigoController {
 
+
+
     @Autowired
     private AbrigoRepository repository;
 

@@ -3,6 +3,7 @@ package br.com.alura.adopet.api.controller;
 import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.model.StatusAdocao;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
+import br.com.alura.adopet.api.service.AdocaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,51 +21,15 @@ import java.util.List;
 public class AdocaoController {
 
     @Autowired
-    private AdocaoRepository repository;
-
-    @Autowired
-    private JavaMailSender emailSender;
+   private AdocaoService adocaoService;
 
     @PostMapping
     @Transactional
     public ResponseEntity<String> solicitar(@RequestBody @Valid Adocao adocao) {
-        if (adocao.getPet().getAdotado() == true) {
-            return ResponseEntity.badRequest().body("Pet já foi adotado!");
-        } else {
-            List<Adocao> adocoes = repository.findAll();
-            for (Adocao a : adocoes) {
-                if (a.getTutor() == adocao.getTutor() && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
-                    return ResponseEntity.badRequest().body("Tutor já possui outra adoção aguardando avaliação!");
-                }
-            }
-            for (Adocao a : adocoes) {
-                if (a.getPet() == adocao.getPet() && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
-                    return ResponseEntity.badRequest().body("Pet já está aguardando avaliação para ser adotado!");
-                }
-            }
-            for (Adocao a : adocoes) {
-                int contador = 0;
-                if (a.getTutor() == adocao.getTutor() && a.getStatus() == StatusAdocao.APROVADO) {
-                    contador = contador + 1;
-                }
-                if (contador == 5) {
-                    return ResponseEntity.badRequest().body("Tutor chegou ao limite máximo de 5 adoções!");
-                }
-            }
-        }
-        adocao.setData(LocalDateTime.now());
-        adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
-        repository.save(adocao);
-
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setFrom("adopet@email.com.br");
-        email.setTo(adocao.getPet().getAbrigo().getEmail());
-        email.setSubject("Solicitação de adoção");
-        email.setText("Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.");
-        emailSender.send(email);
-
-        return ResponseEntity.ok().build();
+        this.adocaoService.solicitar(adocao); //Não executa a regra de negócio ele chama o método que tem a regra de negocio
+                                        //Chama esse adocao que ta passando no parametro do controller
     }
+
 
     @PutMapping("/aprovar")
     @Transactional
