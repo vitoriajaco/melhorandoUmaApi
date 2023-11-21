@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component // Quando utiliza o component significa que usará um padrão de
 //injeção de dependencia e será elegivel para auto-configuração e autodeteccao de beans do spring. Esses beans são stateless
-public class ValidacaoPetDisponivel {
+public class ValidacaoPetDisponivel implements ValidacaoSolicitacaoAdocao{
 
     @Autowired
     private PetRepository petRepository;
