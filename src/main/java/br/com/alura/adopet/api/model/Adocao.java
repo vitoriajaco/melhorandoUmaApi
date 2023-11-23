@@ -18,10 +18,10 @@ public class Adocao {
     private Long id;
     private LocalDateTime data;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) //Indica para não carregar junto o tutor nem o pet, só se for solicitado
     private Tutor tutor;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.)
     private Pet pet;
 
     private String motivo;
