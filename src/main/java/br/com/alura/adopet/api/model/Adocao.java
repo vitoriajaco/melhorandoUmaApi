@@ -15,34 +15,20 @@ public class Adocao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-
-    @Column(name = "data")
     private LocalDateTime data;
 
-
-
     @ManyToOne
-    @JsonBackReference("tutor_adocoes")
-    @JoinColumn(name = "tutor_id")
     private Tutor tutor;
 
-
     @OneToOne
-    @JoinColumn(name = "pet_id")
-    @JsonManagedReference("adocao_pets")
     private Pet pet;
 
-
-    @Column(name = "motivo")
     private String motivo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING) //Usa para armazenar o texto da constante e não a posição
     private StatusAdocao status;
 
-    @Column(name = "justificativa_status")
     private String justificativaStatus;
 
     @Override
